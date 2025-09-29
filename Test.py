@@ -31,7 +31,7 @@ def draw_predictions(image, predictions, categories, confidence_threshold, outpu
     fig, ax = plt.subplots(1)
     ax.imshow(image)
     
-    colors = ['r', 'g', 'b']  # Different colors for different classes
+    colors = ['r', 'g', 'b']  
     
     for box, score, label in zip(predictions['boxes'], predictions['scores'], predictions['labels']):
         if score >= confidence_threshold:
@@ -40,12 +40,11 @@ def draw_predictions(image, predictions, categories, confidence_threshold, outpu
             width = x2 - x1
             height = y2 - y1
             
-            # Create rectangle patch
             rect = patches.Rectangle((x1, y1), width, height, linewidth=2, 
                                    edgecolor=colors[label-1], facecolor='none')
             ax.add_patch(rect)
             
-            # Add label and score
+            # label and score
             label_text = f'{categories[label-1]}: {score:.2f}'
             plt.text(x1, y1-10, label_text, color=colors[label-1], fontsize=12, 
                     bbox=dict(facecolor='white', alpha=0.7))
@@ -55,36 +54,24 @@ def draw_predictions(image, predictions, categories, confidence_threshold, outpu
     plt.close()
 
 def test_image():
-    # Define categories
     categories = ["with_mask", "without_mask", "mask_weared_incorrect"]
     
-    # Set paths and parameters
-    image_path ="E:\\WindowsApps\\Downloads\\testanh.jpeg" # Replace with your test image path
+    image_path ="E:\\WindowsApps\\Downloads\\testanh.jpeg" 
     checkpoint_path = 'E:\\Project\\trained_model_FasterCNN\\best.pt'
     output_path = 'E:/Project/output_prediction.jpg'
     confidence_threshold = 0.3
-    
-    # Set device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    # Load model
     model = load_model(checkpoint_path, device)
-    
-    # Load and preprocess image
     image_tensor, original_image = preprocess_image(image_path)
-    
-    # Perform inference
     with torch.no_grad():
         image_tensor = image_tensor.to(device)
         predictions = model([image_tensor])[0]
-    
-    # Draw and save predictions
+
     draw_predictions(original_image, predictions, categories, 
                     confidence_threshold, output_path)
     
-    print(f"Prediction saved to {output_path}")
-    
-    # Print predictions
+    print(f" saved to {output_path}")
     print("\nDetected objects:")
     for box, score, label in zip(predictions['boxes'], predictions['scores'], predictions['labels']):
         if score >= confidence_threshold:
