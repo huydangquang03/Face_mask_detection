@@ -1,0 +1,7 @@
+names:
+- with_mask
+- without_mask
+- mask_weared_incorrect
+nc: 3
+train: E:/Project/mask_detection_yolo/images/train
+val: E:/Project/mask_detection_yolo/images/val
